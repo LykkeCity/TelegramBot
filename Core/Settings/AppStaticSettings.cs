@@ -17,6 +17,7 @@
         public string AndroidAppUrl { get; set; }
         public string IosAppUrl { get; set; }
         public string SupportMail { get; set; }
+        public string FaqUrl { get; set; }
     }
 
     public class Db

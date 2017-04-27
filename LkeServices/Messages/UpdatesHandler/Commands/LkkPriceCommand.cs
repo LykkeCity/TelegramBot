@@ -25,8 +25,8 @@ namespace LkeServices.Messages.UpdatesHandler.Commands
             var prices = await _lykkePriceService.GetLkkPrice();
             var msg = isGroup
                 ? await _messagesService.GetGroupMsg()
-                : await _messagesService.GetLkkPriceMsg(prices.LkkUsdAsk, prices.LkkUsdBid, prices.BtcLkkAsk,
-                    prices.BtcLkkBid);
+                : await _messagesService.GetLkkPriceMsg(prices.LkkUsdAsk, prices.LkkUsdBid, prices.LkkBtcAsk,
+                    prices.LkkBtcBid);
             await _telegramBotClient.SendTextMessageAsync(chatId, msg);
         }
     }

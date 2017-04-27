@@ -23,6 +23,40 @@ namespace AzureRepositories.Messages
             _memoryCache = memoryCache;
         }
 
+        public class Templates
+        {
+            public string WelcomeMsgTemplate { get; set; }
+            public string StartGroupMsgTemplate { get; set; }
+            public string StartPrivateMsgTemplate { get; set; }
+            public string LkkPriceMsgTemplate { get; set; }
+            public string AndroidAppMsgTemplate { get; set; }
+            public string IosAppMsgTemplate { get; set; }
+            public string SupportMailMsgTemplate { get; set; }
+            public string FaqMsgTemplate { get; set; }
+        }
+
+        private async Task<Templates> GetAllTemplates()
+        {
+            Templates record;
+
+            if (!_memoryCache.TryGetValue(TemplatesCacheKey, out record))
+            {
+                if (!await _blobStorage.HasBlobAsync(ContainerName, TemplatesFile))
+                {
+                    return null;
+                }
+
+                record = (await _blobStorage.GetAsTextAsync(ContainerName, TemplatesFile)).DeserializeJson<Templates>();
+
+                var cacheEntryOptions = new MemoryCacheEntryOptions()
+                    .SetAbsoluteExpiration(_cacheExpTime);
+
+                _memoryCache.Set(TemplatesCacheKey, record, cacheEntryOptions);
+            }
+
+            return record;
+        }
+
         public async Task<string> GetWelcomeMsgTemplate()
         {
             return (await GetAllTemplates()).WelcomeMsgTemplate;
@@ -58,37 +92,9 @@ namespace AzureRepositories.Messages
             return (await GetAllTemplates()).SupportMailMsgTemplate;
         }
 
-        public class Templates
+        public async Task<string> GetFaqMsgTemplate()
         {
-            public string WelcomeMsgTemplate { get; set; }
-            public string StartGroupMsgTemplate { get; set; }
-            public string StartPrivateMsgTemplate { get; set; }
-            public string LkkPriceMsgTemplate { get; set; }
-            public string AndroidAppMsgTemplate { get; set; }
-            public string IosAppMsgTemplate { get; set; }
-            public string SupportMailMsgTemplate { get; set; }
-        }
-
-        private async Task<Templates> GetAllTemplates()
-        {
-            Templates record;
-
-            if (!_memoryCache.TryGetValue(TemplatesCacheKey, out record))
-            {
-                if (!await _blobStorage.HasBlobAsync(ContainerName, TemplatesFile))
-                {
-                    return null;
-                }
-
-                record = (await _blobStorage.GetAsTextAsync(ContainerName, TemplatesFile)).DeserializeJson<Templates>();
-
-                var cacheEntryOptions = new MemoryCacheEntryOptions()
-                    .SetAbsoluteExpiration(_cacheExpTime);
-
-                _memoryCache.Set(TemplatesCacheKey, record, cacheEntryOptions);
-            }
-
-            return record;
+            return (await GetAllTemplates()).FaqMsgTemplate;
         }
     }
 }

@@ -11,6 +11,7 @@ namespace LkeServices.Prices
     public class LykkePriceService : ILykkePriceService
     {
         private readonly TelegramBotSettings _settings;
+        private const int BtcAccuracy = 8;
 
         public LykkePriceService(TelegramBotSettings settings)
         {
@@ -30,8 +31,8 @@ namespace LkeServices.Prices
             return new LkkPrice
             {
                 LkkUsdAsk = lkkUsd.Ask,
-                BtcLkkBid = btcLkk.Bid,
-                BtcLkkAsk = btcLkk.Ask,
+                LkkBtcBid = (1 / btcLkk.Ask).TruncateDecimalPlaces(BtcAccuracy),
+                LkkBtcAsk = (1 / btcLkk.Bid).TruncateDecimalPlaces(BtcAccuracy),
                 LkkUsdBid = lkkUsd.Bid
             };
         }

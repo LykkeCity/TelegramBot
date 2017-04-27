@@ -85,6 +85,7 @@ namespace Lykke.TelegramBot
             services.AddTransient<SupportMailCommand>();
             services.AddTransient<UserJoinedCommand>();
             services.AddTransient<UserLeftCommand>();
+            services.AddTransient<FaqCommand>();
 
             services.AddTransient<IUpdatesHandlerService, UpdateHandlerService>();
 

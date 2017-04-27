@@ -10,6 +10,7 @@
     "PublicApiBaseUrl": "https://lykke-public-api.azurewebsites.net",
     "AndroidAppUrl": "",
     "IosAppUrl": "",
-    "SupportMail": "mailto:support@lykke.com"
+    "SupportMail": "mailto:support@lykke.com",
+    "FaqUrl": "https://www.lykke.com/city/faq"
   }
 }

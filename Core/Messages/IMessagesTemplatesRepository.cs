@@ -11,5 +11,6 @@ namespace Core.Messages
         Task<string> GetAndroidAppMsgTemplate();
         Task<string> GetIosAppMsgTemplate();
         Task<string> GetSupportMailMsgTemplate();
+        Task<string> GetFaqMsgTemplate();
     }
 }

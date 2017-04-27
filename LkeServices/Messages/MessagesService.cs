@@ -15,13 +15,15 @@ namespace LkeServices.Messages
 
             public const string LkkUsdAsk = "@[LkkUsdAsk]";
             public const string LkkUsdBid = "@[LkkUsdBid]";
-            public const string BtcLkkAsk = "@[BtcLkkAsk]";
-            public const string BtcLkkBid = "@[BtcLkkBid]";
+            public const string LkkBtcAsk = "@[LkkBtcAsk]";
+            public const string LkkBtcBid = "@[LkkBtcBid]";
 
             public const string AndroidAppUrl = "@[AndroidAppUrl]";
             public const string IosAppUrl = "@[IosAppUrl]";
 
             public const string SupportMail = "@[SupportMail]";
+
+            public const string FaqUrl = "@[FaqUrl]";
         }
 
         public MessagesService(IMessagesTemplatesRepository messagesTemplatesRepository)
@@ -56,7 +58,7 @@ namespace LkeServices.Messages
             return await _messagesTemplatesRepository.GetStartGroupMsgTemplate();
         }
 
-        public async Task<string> GetLkkPriceMsg(double lkkUsdAsk, double lkkUsdBid, double btcLkkAsk, double btcLkkBid)
+        public async Task<string> GetLkkPriceMsg(double lkkUsdAsk, double lkkUsdBid, double lkkBtcAsk, double lkkBtcBid)
         {
             var msg = await _messagesTemplatesRepository.GetLkkPriceMsgTemplate();
 
@@ -70,14 +72,14 @@ namespace LkeServices.Messages
                 msg = msg.Replace(MsgTokens.LkkUsdBid, lkkUsdBid.ToString(CultureInfo.InvariantCulture));
             }
 
-            if (msg.Contains(MsgTokens.BtcLkkAsk))
+            if (msg.Contains(MsgTokens.LkkBtcAsk))
             {
-                msg = msg.Replace(MsgTokens.BtcLkkAsk, btcLkkAsk.ToString(CultureInfo.InvariantCulture));
+                msg = msg.Replace(MsgTokens.LkkBtcAsk, lkkBtcAsk.ToString(CultureInfo.InvariantCulture));
             }
 
-            if (msg.Contains(MsgTokens.BtcLkkBid))
+            if (msg.Contains(MsgTokens.LkkBtcBid))
             {
-                msg = msg.Replace(MsgTokens.BtcLkkBid, btcLkkBid.ToString(CultureInfo.InvariantCulture));
+                msg = msg.Replace(MsgTokens.LkkBtcBid, lkkBtcBid.ToString(CultureInfo.InvariantCulture));
             }
 
             return msg;
@@ -114,6 +116,18 @@ namespace LkeServices.Messages
             if (msg.Contains(MsgTokens.SupportMail))
             {
                 msg = msg.Replace(MsgTokens.SupportMail, supportEmail);
+            }
+
+            return msg;
+        }
+
+        public async Task<string> GetFaqMsg(string faqUrl)
+        {
+            var msg = await _messagesTemplatesRepository.GetFaqMsgTemplate();
+
+            if (msg.Contains(MsgTokens.FaqUrl))
+            {
+                msg = msg.Replace(MsgTokens.FaqUrl, faqUrl);
             }
 
             return msg;

@@ -6,8 +6,8 @@ namespace Core.Prices
     {
         public double LkkUsdAsk { get; set; }
         public double LkkUsdBid { get; set; }
-        public double BtcLkkAsk { get; set; }
-        public double BtcLkkBid { get; set; }
+        public double LkkBtcAsk { get; set; }
+        public double LkkBtcBid { get; set; }
     }
 
     public interface ILykkePriceService
