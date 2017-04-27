@@ -1,0 +1,15 @@
+﻿{
+  "TelegramBot": {
+    "Db": {
+      "TemplatesConnString": "UseDevelopmentStorage=true",
+      "DataConnString": "UseDevelopmentStorage=true",
+      "LogsConnString": "UseDevelopmentStorage=true"
+    },
+    "Token": "",
+    "BaseUrl": "",
+    "PublicApiBaseUrl": "https://lykke-public-api.azurewebsites.net",
+    "AndroidAppUrl": "",
+    "IosAppUrl": "",
+    "SupportMail": "mailto:support@lykke.com"
+  }
+}

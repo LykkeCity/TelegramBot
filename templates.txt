@@ -1,0 +1,9 @@
+{
+"WelcomeMsgTemplate":"Welcome @[FirstName] @[LastName] to Lykke Telegram chat! Share opinions and ideas, be part of Lykke community. *Important!* Lykke staff never ask you neither to send your money nor to provide your password or any sensitive information.",
+"StartGroupMsgTemplate":"Sorry, I don't want to spam on the general channel. Please send this command in a private message and I will help.",
+"StartPrivateMsgTemplate":"Current LKK price: /lkkprice\nAndroid app: /androidapp\nIos app: /iosapp\nLykke support: /mailsupport",
+"LkkPriceMsgTemplate":"LKKUSD Ask: @[LkkUsdAsk]\nLKKUSD Bid: @[LkkUsdBid]\nBTCLKK Ask: @[BtcLkkAsk]\nBTCLKK Bid: @[BtcLkkBid]",
+"AndroidAppMsgTemplate":"@[AndroidAppUrl]",
+"IosAppMsgTemplate":"@[IosAppUrl]",
+"SupportMailMsgTemplate":"@[SupportMail]"
+}
