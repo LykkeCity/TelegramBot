@@ -22,5 +22,13 @@
     <ProjectReference Include="..\Core\Core.csproj" />
     <ProjectReference Include="..\LkeServices\LkeServices.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <None Update="docker-compose.yml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Dockerfile">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
 
 </Project>
