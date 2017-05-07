@@ -1,15 +1,16 @@
-﻿{
+﻿
+{
   "TelegramBot": {
     "Db": {
-      "TemplatesConnString": "UseDevelopmentStorage=true",
-      "DataConnString": "UseDevelopmentStorage=true",
-      "LogsConnString": "UseDevelopmentStorage=true"
+      "TemplatesConnString": "",
+      "DataConnString": "",
+      "LogsConnString": ""
     },
     "Token": "",
     "BaseUrl": "",
     "PublicApiBaseUrl": "https://lykke-public-api.azurewebsites.net",
-    "AndroidAppUrl": "",
-    "IosAppUrl": "",
+    "AndroidAppUrl": "https://play.google.com/store/apps/details?id=com.lykkex.LykkeWallet",
+    "IosAppUrl": "https://appsto.re/ru/Dwjvcb.i",
     "SupportMail": "mailto:support@lykke.com",
     "FaqUrl": "https://www.lykke.com/city/faq"
   }

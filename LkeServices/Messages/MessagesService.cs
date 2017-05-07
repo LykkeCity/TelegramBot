@@ -58,28 +58,28 @@ namespace LkeServices.Messages
             return await _messagesTemplatesRepository.GetStartGroupMsgTemplate();
         }
 
-        public async Task<string> GetLkkPriceMsg(double lkkUsdAsk, double lkkUsdBid, double lkkBtcAsk, double lkkBtcBid)
+        public async Task<string> GetLkkPriceMsg(double? lkkUsdAsk, double? lkkUsdBid, double? lkkBtcAsk, double? lkkBtcBid)
         {
             var msg = await _messagesTemplatesRepository.GetLkkPriceMsgTemplate();
 
             if (msg.Contains(MsgTokens.LkkUsdAsk))
             {
-                msg = msg.Replace(MsgTokens.LkkUsdAsk, lkkUsdAsk.ToString(CultureInfo.InvariantCulture));
+                msg = msg.Replace(MsgTokens.LkkUsdAsk, lkkUsdAsk?.ToString("0.########") ?? "-");
             }
 
             if (msg.Contains(MsgTokens.LkkUsdBid))
             {
-                msg = msg.Replace(MsgTokens.LkkUsdBid, lkkUsdBid.ToString(CultureInfo.InvariantCulture));
+                msg = msg.Replace(MsgTokens.LkkUsdBid, lkkUsdBid?.ToString("0.########") ?? "-");
             }
 
             if (msg.Contains(MsgTokens.LkkBtcAsk))
             {
-                msg = msg.Replace(MsgTokens.LkkBtcAsk, lkkBtcAsk.ToString(CultureInfo.InvariantCulture));
+                msg = msg.Replace(MsgTokens.LkkBtcAsk, lkkBtcAsk?.ToString("0.########") ?? "-");
             }
 
             if (msg.Contains(MsgTokens.LkkBtcBid))
             {
-                msg = msg.Replace(MsgTokens.LkkBtcBid, lkkBtcBid.ToString(CultureInfo.InvariantCulture));
+                msg = msg.Replace(MsgTokens.LkkBtcBid, lkkBtcBid?.ToString("0.########") ?? "-");
             }
 
             return msg;

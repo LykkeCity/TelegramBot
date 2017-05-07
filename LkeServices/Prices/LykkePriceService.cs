@@ -20,7 +20,7 @@ namespace LkeServices.Prices
 
         public async Task<LkkPrice> GetLkkPrice()
         {
-            var httpClient = new HttpClient { BaseAddress = new Uri($"{_settings.PublicApiBaseUrl}")};
+            var httpClient = new HttpClient { BaseAddress = new Uri($"{_settings.PublicApiBaseUrl}") };
             var lkkUsd =
                 (await httpClient.GetStringAsync($"api/AssetPairs/rate/{Constants.LKKUSD}"))
                 .DeserializeJson<RatesResponse>();
@@ -28,11 +28,19 @@ namespace LkeServices.Prices
                 (await httpClient.GetStringAsync($"api/AssetPairs/rate/{Constants.BTCLKK}"))
                 .DeserializeJson<RatesResponse>();
 
+            double? btcBid = null;
+            if (btcLkk.Bid > double.Epsilon)
+                btcBid = (1 / btcLkk.Bid).TruncateDecimalPlaces(BtcAccuracy);
+
+            double? btcAsk = null;
+            if (btcLkk.Ask > double.Epsilon)
+                btcAsk = (1 / btcLkk.Ask).TruncateDecimalPlaces(BtcAccuracy);
+
             return new LkkPrice
             {
                 LkkUsdAsk = lkkUsd.Ask,
-                LkkBtcBid = (1 / btcLkk.Ask).TruncateDecimalPlaces(BtcAccuracy),
-                LkkBtcAsk = (1 / btcLkk.Bid).TruncateDecimalPlaces(BtcAccuracy),
+                LkkBtcBid = btcBid,
+                LkkBtcAsk = btcAsk,
                 LkkUsdBid = lkkUsd.Bid
             };
         }

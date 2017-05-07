@@ -1,9 +1,13 @@
-﻿using AzureRepositories.Log;
+﻿using Autofac;
+using Autofac.Extensions.DependencyInjection;
+using Autofac.Features.ResolveAnything;
+using AzureRepositories.Log;
 using AzureRepositories.Messages;
 using AzureRepositories.Settings;
 using AzureRepositories.Telegram;
 using AzureStorage.Blob;
 using AzureStorage.Tables;
+using Common.IocContainer;
 using Common.Log;
 using Core.Messages;
 using Core.Prices;
@@ -12,45 +16,45 @@ using Core.Telegram;
 using LkeServices.Messages;
 using LkeServices.Messages.UpdatesHandler.Commands;
 using LkeServices.Prices;
-using Lykke.TelegramBot.Infrastructure;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Swashbuckle.Swagger.Model;
 using Telegram.Bot;
 
-namespace Lykke.TelegramBot
+namespace Lykke.TelegramBotJob
 {
-    public class Startup
+    public class AzureBinder : IDependencyBinder
     {
-        public Startup(IHostingEnvironment env)
+        public const string DefaultConnectionString = "UseDevelopmentStorage=true";
+
+
+        public ContainerBuilder Bind(IConfigurationRoot configuration, ContainerBuilder builder = null)
         {
-            var builder = new ConfigurationBuilder()
-                .SetBasePath(env.ContentRootPath)
-                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-                .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
-                .AddEnvironmentVariables();
-            Configuration = builder.Build();
+            var connectionString = configuration.GetConnectionString("Main");
+
+            var serviceCollection = new ServiceCollection();
+
+            ConfigureServices(connectionString, serviceCollection);
+
+            var ioc = new ContainerBuilder();
+            ioc.Populate(serviceCollection);
+
+            ioc.RegisterSource(new AnyConcreteTypeNotAlreadyRegisteredSource());
+
+            return ioc;
         }
 
-        public IConfigurationRoot Configuration { get; }
-
-        // This method gets called by the runtime. Use this method to add services to the container.
-        public void ConfigureServices(IServiceCollection services)
+        public void ConfigureServices(string connectionString, IServiceCollection services)
         {
 #if DEBUG
-            var settings = GeneralSettingsReader.ReadGeneralSettingsLocal<AppStaticSettings>(Configuration.GetConnectionString("Main")).TelegramBot;
+            var settings = GeneralSettingsReader.ReadGeneralSettingsLocal<AppStaticSettings>(connectionString).TelegramBot;
 #else
-            var settings = GeneralSettingsReader.ReadGeneralSettings<AppStaticSettings>(Configuration.GetConnectionString("Main")).TelegramBot;
+            var settings = GeneralSettingsReader.ReadGeneralSettings<AppStaticSettings>(connectionString).TelegramBot;
 #endif
             services.AddMemoryCache();
             services.AddSingleton(settings);
 
             var telegramBot = new TelegramBotClient(settings.Token);
-            telegramBot.SetWebhookAsync($"{settings.BaseUrl}/api/TelegramUpdates").Wait();
             services.AddSingleton(telegramBot);
 
             var sp = services.BuildServiceProvider();
@@ -65,13 +69,17 @@ namespace Lykke.TelegramBot
             services.AddSingleton<ILog>(log);
 
             services.AddSingleton<IHandledMessagesRepository>(
-                new HandledMessagesRepository(new AzureTableStorage<HandledMessageRecord>(settings.Db.DataConnString,
+                new HandledMessagesRepository(new AzureTableStorageWithCache<HandledMessageRecord>(settings.Db.DataConnString,
                     "TgHandledMessages", log)));
 
 
             services.AddSingleton<IUsersOnChannelRepository>(
                 new UsersOnChannelRepository(new AzureTableStorage<UserOnChannelRecord>(settings.Db.DataConnString,
                     "TgUsersOnChannel", log)));
+
+            services.AddSingleton<IOffsetRepository>(
+                new OffsetRepository(new AzureTableStorage<OffsetRecord>(settings.Db.DataConnString,
+                    "TgUpdatesOffset", log)));
 
             services.AddTransient<IMessagesService, MessagesService>();
             services.AddTransient<ILykkePriceService, LykkePriceService>();
@@ -88,29 +96,6 @@ namespace Lykke.TelegramBot
             services.AddTransient<FaqCommand>();
 
             services.AddTransient<IUpdatesHandlerService, UpdateHandlerService>();
-
-            // Add framework services.
-            services.AddMvc();
-
-            services.AddSwaggerGen(options =>
-            {
-                options.SingleApiVersion(new Info
-                {
-                    Version = "v1",
-                    Title = "TelegramUpdateHandler"
-                });
-                options.DescribeAllEnumsAsStrings();
-            });
-        }
-
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory,
-                        IApplicationLifetime appLifetime)
-        {
-            app.UseMiddleware<GlobalErrorHandlerMiddleware>();
-            app.UseMvc();
-            app.UseSwagger();
-            app.UseSwaggerUi();
         }
     }
 }
