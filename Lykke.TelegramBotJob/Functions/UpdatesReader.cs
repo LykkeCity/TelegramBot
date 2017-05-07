@@ -68,7 +68,7 @@ namespace Lykke.TelegramBotJob.Functions
 
                 if (await _handledMessagesRepository.TryHandleMessage(message.MessageId))
                 {
-                    await _updatesHandlerService.HandleUpdate(message.Chat.Type == ChatType.Group, message.Chat.Id, cmd,
+                    await _updatesHandlerService.HandleUpdate(message.Chat.Type == ChatType.Group || message.Chat.Type == ChatType.Supergroup, message.Chat.Id, cmd,
                         usrJoined, usrLeft);
                 }
             }

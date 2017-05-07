@@ -55,6 +55,7 @@ namespace Lykke.TelegramBotJob
             services.AddSingleton(settings);
 
             var telegramBot = new TelegramBotClient(settings.Token);
+            telegramBot.SetWebhookAsync(string.Empty).Wait();
             services.AddSingleton(telegramBot);
 
             var sp = services.BuildServiceProvider();
