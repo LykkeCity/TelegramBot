@@ -1,10 +1,12 @@
 ﻿
 {
-  "TelegramBot": {
+  "TelegramBot": 
+  {
     "Db": {
       "TemplatesConnString": "",
       "DataConnString": "",
-      "LogsConnString": ""
+      "LogsConnString": "",
+      "SharedConnString": ""
     },
     "Token": "",
     "BaseUrl": "",

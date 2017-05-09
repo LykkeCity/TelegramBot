@@ -25,5 +25,6 @@
         public string TemplatesConnString { get; set; }
         public string DataConnString { get; set; }
         public string LogsConnString { get; set; }
+        public string SharedConnString { get; set; }
     }
 }

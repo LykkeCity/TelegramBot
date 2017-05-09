@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Core.Telegram;
 using LkeServices.Messages.UpdatesHandler.Commands;
@@ -34,6 +35,9 @@ namespace Lykke.TelegramBotJob.Functions
             {
                 var message = update.Message;
 
+                if (message == null)
+                    continue;
+
                 var usrJoined = message.NewChatMember != null
                     ? new Core.Telegram.User
                     {
@@ -68,8 +72,13 @@ namespace Lykke.TelegramBotJob.Functions
 
                 if (await _handledMessagesRepository.TryHandleMessage(message.MessageId))
                 {
-                    await _updatesHandlerService.HandleUpdate(message.Chat.Type == ChatType.Group || message.Chat.Type == ChatType.Supergroup, message.Chat.Id, cmd,
-                        usrJoined, usrLeft);
+                    if (DateTime.UtcNow - message.Date < TimeSpan.FromMinutes(1))
+                    {
+                        await _updatesHandlerService.HandleUpdate(
+                            message.Chat.Type == ChatType.Group || message.Chat.Type == ChatType.Supergroup,
+                            message.Chat.Id, cmd,
+                            usrJoined, usrLeft);
+                    }
                 }
             }
         }

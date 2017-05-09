@@ -1,6 +1,7 @@
 ﻿using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using Autofac.Features.ResolveAnything;
+using AzureRepositories.Infrastructure;
 using AzureRepositories.Log;
 using AzureRepositories.Messages;
 using AzureRepositories.Settings;
@@ -9,6 +10,7 @@ using AzureStorage.Blob;
 using AzureStorage.Tables;
 using Common.IocContainer;
 using Common.Log;
+using Core.Infrastructure;
 using Core.Messages;
 using Core.Prices;
 using Core.Settings;
@@ -81,6 +83,10 @@ namespace Lykke.TelegramBotJob
             services.AddSingleton<IOffsetRepository>(
                 new OffsetRepository(new AzureTableStorage<OffsetRecord>(settings.Db.DataConnString,
                     "TgUpdatesOffset", log)));
+
+            services.AddSingleton<IServiceMonitoringRepository>(
+                new ServiceMonitoringRepository(new AzureTableStorage<MonitoringRecordEntity>(settings.Db.SharedConnString,
+                    "Monitoring", log)));
 
             services.AddTransient<IMessagesService, MessagesService>();
             services.AddTransient<ILykkePriceService, LykkePriceService>();
