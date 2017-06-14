@@ -30,9 +30,18 @@ namespace Lykke.TelegramBotJob.Functions
         [TimerTrigger("00:00:01")]
         public async Task GetUpdates()
         {
-            var updates = await _telegramBotClient.GetUpdatesAsync(await _offsetRepository.IncrementOffset());
+            var updates = await _telegramBotClient.GetUpdatesAsync(await _offsetRepository.GetOffset());
+
+            int maxOffset = 0;
             foreach (var update in updates)
             {
+                bool offsetWasUpdated = false;
+                if (update.Id > maxOffset)
+                {
+                    maxOffset = update.Id;
+                    offsetWasUpdated = true;
+                }
+
                 var message = update.Message;
 
                 if (message == null)
@@ -80,6 +89,9 @@ namespace Lykke.TelegramBotJob.Functions
                             usrJoined, usrLeft);
                     }
                 }
+
+                if (offsetWasUpdated)
+                    await _offsetRepository.SetOffset(maxOffset);
             }
         }
     }

@@ -66,7 +66,7 @@ namespace Lykke.TelegramBotJob
             services.AddSingleton<IMessagesTemplatesRepository>(
                 new MessagesTemplatesRepository(new AzureBlobStorage(settings.Db.TemplatesConnString), memCache));
 
-            var log = new LogToTable(new AzureTableStorageWithCache<LogEntity>(settings.Db.LogsConnString,
+            var log = new LogToTable(new AzureTableStorage<LogEntity>(settings.Db.LogsConnString,
                 "TgLogTelegramBot", null));
 
             services.AddSingleton<ILog>(log);

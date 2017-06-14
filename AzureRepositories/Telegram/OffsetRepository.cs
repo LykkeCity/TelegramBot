@@ -39,16 +39,15 @@ namespace AzureRepositories.Telegram
             _tableStorage = tableStorage;
         }
 
-        public async Task<int> IncrementOffset()
+        public async Task<int> GetOffset()
         {
-            var currentRecord = await _tableStorage.GetDataAsync(OffsetRecord.GeneratePartition(),
-                OffsetRecord.GenerateRowKey()) ?? OffsetRecord.Create(0);
+            return (await _tableStorage.GetDataAsync(OffsetRecord.GeneratePartition(),
+                       OffsetRecord.GenerateRowKey()) ?? OffsetRecord.Create(0)).Offset;
+        }
 
-            currentRecord.Offset++;
-
-            await _tableStorage.InsertOrReplaceAsync(currentRecord);
-
-            return currentRecord.Offset - 1;
+        public Task SetOffset(int offset)
+        {
+            return _tableStorage.InsertOrReplaceAsync(OffsetRecord.Create(offset));
         }
     }
 }
