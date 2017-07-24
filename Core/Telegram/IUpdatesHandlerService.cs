@@ -4,8 +4,7 @@ namespace Core.Telegram
 {
     public interface IUpdatesHandlerService
     {
-        Task HandleUpdate(bool isGroup, string chatId, string botCommand,
-            User userJoined, User userLeft);
+        Task HandleUpdate(string chatId, string botCommand, User userJoined, User userLeft);
     }
 
     public class User

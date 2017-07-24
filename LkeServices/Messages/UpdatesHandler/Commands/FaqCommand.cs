@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Core.Messages;
 using Core.Settings;
 using Core.Telegram;
@@ -20,12 +21,20 @@ namespace LkeServices.Messages.UpdatesHandler.Commands
             _appSettings = appSettings;
         }
 
-        public async Task ExecuteCommand(bool isGroup, string chatId, User userJoined, User userLeft)
+        public IEnumerable<string> SupportedCommands
         {
-            var msg = isGroup
-                ? await _messagesService.GetGroupMsg()
-                : await _messagesService.GetFaqMsg(_appSettings.FaqUrl);
-                await _telegramBotClient.SendTextMessageAsync(chatId, msg);
+            get
+            {
+                yield return BotCommands.Faq;
+                yield return BotCommands.FaqCommand;
+            }
+        }
+
+        public async Task ExecuteCommand(string chatId, User userJoined, User userLeft)
+        {
+            var msg = await _messagesService.GetFaqMsg(_appSettings.FaqUrl);
+
+            await _telegramBotClient.SendTextMessageAsync(chatId, msg);
         }
     }
 }

@@ -13,6 +13,10 @@ namespace LkeServices.Messages
             public const string FirstName = "@[FirstName]";
             public const string LastName = "@[LastName]";
 
+            public const string Pair = "@[Pair]";
+            public const string PairAsk = "@[PairAsk]";
+            public const string PairBid = "@[PairBid]";
+
             public const string LkkUsdAsk = "@[LkkUsdAsk]";
             public const string LkkUsdBid = "@[LkkUsdBid]";
             public const string LkkBtcAsk = "@[LkkBtcAsk]";
@@ -58,6 +62,33 @@ namespace LkeServices.Messages
             return await _messagesTemplatesRepository.GetStartGroupMsgTemplate();
         }
 
+        public async Task<string> GetRatesMsg(string pair, double? bid, double? ask)
+        {
+            var msg = await _messagesTemplatesRepository.GetRatesMsgTemplate();
+
+            if (msg.Contains(MsgTokens.Pair))
+            {
+                msg = msg.Replace(MsgTokens.Pair, pair);
+            }
+
+            if (msg.Contains(MsgTokens.PairBid))
+            {
+                msg = msg.Replace(MsgTokens.PairBid, bid?.ToString("0.########") ?? "-");
+            }
+
+            if (msg.Contains(MsgTokens.PairAsk))
+            {
+                msg = msg.Replace(MsgTokens.PairAsk, ask?.ToString("0.########") ?? "-");
+            }
+
+            return msg;
+        }
+
+        public async Task<string> GetPairsMsg()
+        {
+            return await _messagesTemplatesRepository.GetPairsMsgTemplate();
+        }
+
         public async Task<string> GetLkkPriceMsg(double? lkkUsdAsk, double? lkkUsdBid, double? lkkBtcAsk, double? lkkBtcBid)
         {
             var msg = await _messagesTemplatesRepository.GetLkkPriceMsgTemplate();
@@ -84,6 +115,11 @@ namespace LkeServices.Messages
 
             return msg;
         }
+
+        public async Task<string> GetAppMsg()
+        {
+            return await _messagesTemplatesRepository.GetAppMsgTemplate();            
+        }        
 
         public async Task<string> GetAndroidAppMsg(string anroidAppUrl)
         {

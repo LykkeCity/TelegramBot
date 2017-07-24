@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Core.Messages;
 using Core.Telegram;
 using LkeServices.Messages.UpdatesHandler.Commands;
 using Lykke.JobTriggers.Triggers.Attributes;
@@ -13,16 +14,19 @@ namespace Lykke.TelegramBotJob.Functions
     {
         private readonly IHandledMessagesRepository _handledMessagesRepository;
         private readonly IUpdatesHandlerService _updatesHandlerService;
+        private readonly IMessagesService _messagesService;
         private readonly TelegramBotClient _telegramBotClient;
         private readonly IOffsetRepository _offsetRepository;
 
         public UpdatesReader(IHandledMessagesRepository handledMessagesRepository,
             IUpdatesHandlerService updatesHandlerService,
+            IMessagesService messagesService,
             TelegramBotClient telegramBotClient,
             IOffsetRepository offsetRepository)
         {
             _handledMessagesRepository = handledMessagesRepository;
             _updatesHandlerService = updatesHandlerService;
+            _messagesService = messagesService;
             _telegramBotClient = telegramBotClient;
             _offsetRepository = offsetRepository;
         }
@@ -30,7 +34,8 @@ namespace Lykke.TelegramBotJob.Functions
         [TimerTrigger("00:00:01")]
         public async Task GetUpdates()
         {
-            var updates = await _telegramBotClient.GetUpdatesAsync(await _offsetRepository.GetOffset());
+            var offset = await _offsetRepository.GetOffset();
+            var updates = await _telegramBotClient.GetUpdatesAsync(offset);
 
             int maxOffset = 0;
             foreach (var update in updates)
@@ -66,16 +71,26 @@ namespace Lykke.TelegramBotJob.Functions
                     : null;
 
                 var cmd = usrJoined != null
-                    ? BotCommandsFactory.UserJoined
-                    : usrLeft != null ? BotCommandsFactory.UserLeft : string.Empty;
+                    ? BotCommands.UserJoined
+                    : usrLeft != null ? BotCommands.UserLeft : string.Empty;
 
-                foreach (var entity in message.Entities)
+                if (string.IsNullOrWhiteSpace(cmd))
                 {
-                    if (entity.Type == MessageEntityType.BotCommand)
+                    if (message.Entities.Any())
                     {
-                        cmd = message.Text.Trim();
-                        if (cmd.Contains('@'))
-                            cmd = cmd.Substring(0, cmd.IndexOf('@'));
+                        foreach (var entity in message.Entities)
+                        {
+                            if (entity.Type == MessageEntityType.BotCommand)
+                            {
+                                cmd = message.Text.Trim();
+                                if (cmd.Contains('@'))
+                                    cmd = cmd.Substring(0, cmd.IndexOf('@'));
+                            }
+                        }
+                    }
+                    else
+                    {
+                        cmd = BotCommands.TextCommands.FirstOrDefault(c => c == message.Text);
                     }
                 }
 
@@ -83,10 +98,17 @@ namespace Lykke.TelegramBotJob.Functions
                 {
                     if (DateTime.UtcNow - message.Date < TimeSpan.FromMinutes(1))
                     {
-                        await _updatesHandlerService.HandleUpdate(
-                            message.Chat.Type == ChatType.Group || message.Chat.Type == ChatType.Supergroup,
-                            message.Chat.Id, cmd,
-                            usrJoined, usrLeft);
+                        if ((message.Chat.Type == ChatType.Group || message.Chat.Type == ChatType.Supergroup) && cmd != BotCommands.UserJoined && cmd != BotCommands.UserLeft)
+                        {
+                            var msg = await _messagesService.GetGroupMsg();
+                            await _telegramBotClient.SendTextMessageAsync(message.Chat.Id, msg);
+                        }
+                        else
+                        {
+                            await _updatesHandlerService.HandleUpdate(
+                                message.Chat.Id, cmd,
+                                usrJoined, usrLeft);
+                        }
                     }
                 }
 

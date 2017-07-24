@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Core.Telegram;
 
@@ -13,7 +14,12 @@ namespace LkeServices.Messages.UpdatesHandler.Commands
             _usersOnChannelRepository = usersOnChannelRepository;
         }
 
-        public async Task ExecuteCommand(bool isGroup, string chatId, User userJoined, User userLeft)
+        public IEnumerable<string> SupportedCommands
+        {
+            get { yield return BotCommands.UserLeft; }
+        }
+
+        public async Task ExecuteCommand(string chatId, User userJoined, User userLeft)
         {
             if (userLeft == null)
                 throw new Exception(nameof(userLeft));

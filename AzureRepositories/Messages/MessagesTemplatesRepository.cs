@@ -28,11 +28,14 @@ namespace AzureRepositories.Messages
             public string WelcomeMsgTemplate { get; set; }
             public string StartGroupMsgTemplate { get; set; }
             public string StartPrivateMsgTemplate { get; set; }
+            public string RatesMsgTemplate { get; set; }
             public string LkkPriceMsgTemplate { get; set; }
+            public string GetAppMsgTemplate { get; set; }
             public string AndroidAppMsgTemplate { get; set; }
             public string IosAppMsgTemplate { get; set; }
             public string SupportMailMsgTemplate { get; set; }
             public string FaqMsgTemplate { get; set; }
+            public string PairsMsgTemplate { get; set; }
         }
 
         private async Task<Templates> GetAllTemplates()
@@ -72,9 +75,19 @@ namespace AzureRepositories.Messages
             return (await GetAllTemplates()).StartGroupMsgTemplate;
         }
 
+        public async Task<string> GetRatesMsgTemplate()
+        {
+            return (await GetAllTemplates()).RatesMsgTemplate;
+        }
+
         public async Task<string> GetLkkPriceMsgTemplate()
         {
             return (await GetAllTemplates()).LkkPriceMsgTemplate;
+        }
+
+        public async Task<string> GetAppMsgTemplate()
+        {
+            return (await GetAllTemplates()).GetAppMsgTemplate;
         }
 
         public async Task<string> GetAndroidAppMsgTemplate()
@@ -95,6 +108,11 @@ namespace AzureRepositories.Messages
         public async Task<string> GetFaqMsgTemplate()
         {
             return (await GetAllTemplates()).FaqMsgTemplate;
+        }
+
+        public async Task<string> GetPairsMsgTemplate()
+        {
+            return (await GetAllTemplates()).PairsMsgTemplate;
         }
     }
 }

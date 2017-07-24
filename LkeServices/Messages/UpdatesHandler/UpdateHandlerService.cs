@@ -14,11 +14,11 @@ namespace LkeServices.Messages
             _botCommandsFactory = botCommandsFactory;
         }
 
-        public async Task HandleUpdate(bool isGroup, string chatId, string botCommand, User userJoined, User userLeft)
+        public async Task HandleUpdate(string chatId, string botCommand, User userJoined, User userLeft)
         {
             var command = _botCommandsFactory.GetCommand(botCommand);
             if (command != null)
-                await command.ExecuteCommand(isGroup, chatId, userJoined, userLeft);
+                await command.ExecuteCommand(chatId, userJoined, userLeft);
         }
     }
 }

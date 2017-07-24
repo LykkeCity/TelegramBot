@@ -16,7 +16,9 @@ using Core.Prices;
 using Core.Settings;
 using Core.Telegram;
 using LkeServices.Messages;
+using LkeServices.Messages.UpdatesHandler;
 using LkeServices.Messages.UpdatesHandler.Commands;
+using LkeServices.Messages.UpdatesHandler.Commands.Rates;
 using LkeServices.Prices;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
@@ -39,7 +41,7 @@ namespace Lykke.TelegramBotJob
             ConfigureServices(connectionString, serviceCollection);
 
             var ioc = new ContainerBuilder();
-            ioc.Populate(serviceCollection);
+            ioc.Populate(serviceCollection);            
 
             ioc.RegisterSource(new AnyConcreteTypeNotAlreadyRegisteredSource());
 
@@ -91,18 +93,28 @@ namespace Lykke.TelegramBotJob
             services.AddTransient<IMessagesService, MessagesService>();
             services.AddTransient<ILykkePriceService, LykkePriceService>();
             services.AddTransient<IUpdatesHandlerService, UpdateHandlerService>();
-
+            services.AddTransient<ILykkeApiClient, LykkeApiClient>();
+            
             services.AddTransient<BotCommandsFactory>();
-            services.AddTransient<AndroidAppCommand>();
-            services.AddTransient<IosAppCommand>();
-            services.AddTransient<LkkPriceCommand>();
-            services.AddTransient<StartCommand>();
-            services.AddTransient<SupportMailCommand>();
-            services.AddTransient<UserJoinedCommand>();
-            services.AddTransient<UserLeftCommand>();
-            services.AddTransient<FaqCommand>();
+            services.AddTransient<IBotCommand, AndroidAppCommand>();
+            services.AddTransient<IBotCommand, IosAppCommand>();
+            services.AddTransient<IBotCommand, LkkPriceCommand>();
+            services.AddTransient<IBotCommand, StartCommand>();
+            services.AddTransient<IBotCommand, SupportMailCommand>();
+            services.AddTransient<IBotCommand, UserJoinedCommand>();
+            services.AddTransient<IBotCommand, UserLeftCommand>();
+            services.AddTransient<IBotCommand, FaqCommand>();
+            services.AddTransient<IBotCommand, GetAppCommand>();
+            services.AddTransient<IBotCommand, ExchangeRatesCommand>();
+            services.AddTransient<IBotCommand, BtcUsdRatesCommand>();
+            services.AddTransient<IBotCommand, EthUsdRatesCommand>();
+            services.AddTransient<IBotCommand, EthBtcRatesCommand>();
+            services.AddTransient<IBotCommand, Lkk1YBtcRatesCommand>();
+            services.AddTransient<IBotCommand, LkkBtcRatesCommand>();
+            services.AddTransient<IBotCommand, SlrBtcRatesCommand>();
+            services.AddTransient<IBotCommand, TimeBtcRatesCommand>();
 
-            services.AddTransient<IUpdatesHandlerService, UpdateHandlerService>();
+            services.AddTransient<IUpdatesHandlerService, UpdateHandlerService>();            
         }
     }
 }

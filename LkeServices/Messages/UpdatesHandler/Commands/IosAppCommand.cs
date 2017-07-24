@@ -1,8 +1,10 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Core.Messages;
 using Core.Settings;
 using Core.Telegram;
 using Telegram.Bot;
+using Telegram.Bot.Types.Enums;
 
 namespace LkeServices.Messages.UpdatesHandler.Commands
 {
@@ -20,12 +22,20 @@ namespace LkeServices.Messages.UpdatesHandler.Commands
             _settings = settings;
         }
 
-        public async Task ExecuteCommand(bool isGroup, string chatId, User userJoined, User userLeft)
+        public IEnumerable<string> SupportedCommands
         {
-            var msg = isGroup
-                ? await _messagesService.GetGroupMsg()
-                : await _messagesService.GetIosAppMsg(_settings.IosAppUrl);
-                await _telegramBotClient.SendTextMessageAsync(chatId, msg);
+            get
+            {
+                yield return BotCommands.IosApp;
+                yield return BotCommands.IosAppCommand;
+            }
+        }
+
+        public async Task ExecuteCommand(string chatId, User userJoined, User userLeft)
+        {
+            var msg = await _messagesService.GetIosAppMsg(_settings.IosAppUrl);
+
+            await _telegramBotClient.SendTextMessageAsync(chatId, msg, ParseMode.Default, false, false, 0, KeyBoards.MainKeyboard);
         }
     }
 }

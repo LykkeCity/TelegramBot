@@ -12,5 +12,8 @@ namespace Core.Messages
         Task<string> GetIosAppMsg(string iosAppUrl);
         Task<string> GetSupportMailMsg(string supportEmail);
         Task<string> GetFaqMsg(string faqUrl);
+        Task<string> GetAppMsg();
+        Task<string> GetRatesMsg(string pair, double? bid, double? ask);
+        Task<string> GetPairsMsg();
     }
 }
