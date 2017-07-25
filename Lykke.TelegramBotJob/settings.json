@@ -1,5 +1,4 @@
-﻿
-{
+﻿{
   "TelegramBot": 
   {
     "Db": {
@@ -13,7 +12,7 @@
     "PublicApiBaseUrl": "https://lykke-public-api.azurewebsites.net",
     "AndroidAppUrl": "https://play.google.com/store/apps/details?id=com.lykkex.LykkeWallet",
     "IosAppUrl": "https://appsto.re/ru/Dwjvcb.i",
-    "SupportMail": "mailto:support@lykke.com",
+    "SupportMail": "support@lykke.com",
     "FaqUrl": "https://www.lykke.com/city/faq"
   }
 }
