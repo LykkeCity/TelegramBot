@@ -19,8 +19,8 @@ namespace LkeServices.Prices
 
             return new InverseRatesModel
             {
-                Ask = inverseAsk,
-                Bid = inverseBid
+                Ask = inverseBid,
+                Bid = inverseAsk
             };
         }
     }
