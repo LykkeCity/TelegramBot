@@ -32,14 +32,20 @@ namespace LkeServices.Messages.UpdatesHandler.Commands
                 new[]
                 {
                     new KeyboardButton(BotCommands.BtcUsd),
-                    new KeyboardButton(BotCommands.EthUsd),
+                    new KeyboardButton(BotCommands.EthUsd)                    
+                },
+                new[]
+                {                    
                     new KeyboardButton(BotCommands.EthBtc),
                     new KeyboardButton(BotCommands.LkkBtc)
                 },
                 new[]
                 {
                     new KeyboardButton(BotCommands.Lkk1Ybtc),
-                    new KeyboardButton(BotCommands.TimeBtc),
+                    new KeyboardButton(BotCommands.TimeBtc),                    
+                },
+                new[]
+                {                    
                     new KeyboardButton(BotCommands.SlrBtc),
                     new KeyboardButton(BotCommands.Return)
                 }
