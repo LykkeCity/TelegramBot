@@ -90,15 +90,13 @@ namespace Lykke.TelegramBotJob
                 new ServiceMonitoringRepository(new AzureTableStorage<MonitoringRecordEntity>(settings.Db.SharedConnString,
                     "Monitoring", log)));
 
-            services.AddTransient<IMessagesService, MessagesService>();
-            services.AddTransient<ILykkePriceService, LykkePriceService>();
+            services.AddTransient<IMessagesService, MessagesService>();            
             services.AddTransient<IUpdatesHandlerService, UpdateHandlerService>();
             services.AddTransient<ILykkeApiClient, LykkeApiClient>();
             
             services.AddTransient<BotCommandsFactory>();
             services.AddTransient<IBotCommand, AndroidAppCommand>();
-            services.AddTransient<IBotCommand, IosAppCommand>();
-            services.AddTransient<IBotCommand, LkkPriceCommand>();
+            services.AddTransient<IBotCommand, IosAppCommand>();            
             services.AddTransient<IBotCommand, StartCommand>();
             services.AddTransient<IBotCommand, SupportMailCommand>();
             services.AddTransient<IBotCommand, UserJoinedCommand>();
@@ -111,6 +109,7 @@ namespace Lykke.TelegramBotJob
             services.AddTransient<IBotCommand, EthBtcRatesCommand>();
             services.AddTransient<IBotCommand, Lkk1YBtcRatesCommand>();
             services.AddTransient<IBotCommand, LkkBtcRatesCommand>();
+            services.AddTransient<IBotCommand, LkkUsdRatesCommand>();
             services.AddTransient<IBotCommand, SlrBtcRatesCommand>();
             services.AddTransient<IBotCommand, TimeBtcRatesCommand>();
 

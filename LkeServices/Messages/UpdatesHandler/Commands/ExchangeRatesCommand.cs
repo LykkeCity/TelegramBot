@@ -41,12 +41,16 @@ namespace LkeServices.Messages.UpdatesHandler.Commands
                 },
                 new[]
                 {
-                    new KeyboardButton(BotCommands.Lkk1Ybtc),
-                    new KeyboardButton(BotCommands.TimeBtc),                    
+                    new KeyboardButton(BotCommands.LkkUsd),
+                    new KeyboardButton(BotCommands.Lkk1Ybtc),                    
                 },
                 new[]
+                {
+                    new KeyboardButton(BotCommands.TimeBtc),
+                    new KeyboardButton(BotCommands.SlrBtc),                   
+                },                
+                new[]
                 {                    
-                    new KeyboardButton(BotCommands.SlrBtc),
                     new KeyboardButton(BotCommands.Return)
                 }
             }, true);

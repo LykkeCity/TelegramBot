@@ -9,8 +9,7 @@ namespace LkeServices.Messages.UpdatesHandler.Commands
         {
             new[]
             {
-                new KeyboardButton(BotCommands.Faq),
-                new KeyboardButton(BotCommands.LkkPrice),
+                new KeyboardButton(BotCommands.Faq),                
                 new KeyboardButton(BotCommands.GetApp),                
             },
             new[]
