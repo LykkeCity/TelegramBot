@@ -96,7 +96,7 @@ namespace Lykke.TelegramBotJob.Functions
 
                 if (await _handledMessagesRepository.TryHandleMessage(message.MessageId))
                 {
-                    if (DateTime.UtcNow - message.Date < TimeSpan.FromMinutes(1))
+                    if (DateTime.UtcNow - message.Date < TimeSpan.FromMinutes(1) && cmd != null)
                     {
                         if ((message.Chat.Type == ChatType.Group || message.Chat.Type == ChatType.Supergroup) && cmd != BotCommands.UserJoined && cmd != BotCommands.UserLeft)
                         {
